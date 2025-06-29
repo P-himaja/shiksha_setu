@@ -41,7 +41,7 @@ shikshasetu/
 ├── public/                 # Static assets
 ├── styles/                 # Global styles
 └── README.md
-
+```bash
 ---
 
 ## 📸 Screenshots
