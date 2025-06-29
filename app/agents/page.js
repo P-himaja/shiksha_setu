@@ -219,44 +219,52 @@ export default function Agents() {
             </div>
           )}
 
-          {/* Response Display */}
-          {response && (
-            <div className="mt-8 bg-white rounded-xl shadow-lg p-8">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <h3 className="text-lg font-semibold">
-                  {response.agent} Agent Response
-                </h3>
-                {'confidence' in response && (
-                  <span className="ml-auto text-sm text-gray-500">
-                    Confidence: {(response.confidence * 100).toFixed(0)}%
-                  </span>
-                )}
-              </div>
-              
-              <div className="prose max-w-none">
-                <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                  {response.answer || response.response || 'No response generated'}
-                </div>
-              </div>
+          {/* Agent Response Display */}
+{response && (
+  <div className="mt-8 bg-white rounded-xl shadow-lg p-8 space-y-6">
+    
+    {/* Header */}
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+      <h3 className="text-lg font-semibold">
+        {response.agent} Agent Response
+      </h3>
+      {'confidence' in response && (
+        <span className="ml-auto text-sm text-gray-500">
+          Confidence: {(response.confidence * 100).toFixed(0)}%
+        </span>
+      )}
+    </div>
 
-              {response.sources && response.sources.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <h4 className="font-medium text-gray-700 mb-2">Sources:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {response.sources.map((source, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
-                      >
-                        {source}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+    {/* Main Response Text */}
+    <div className="prose max-w-none">
+      <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+        {response.answer || response.response || 'No response generated'}
+      </div>
+    </div>
+
+    {/* Sources Section */}
+    {response.sources && response.sources.length > 0 && (
+      <div className="pt-4 border-t border-gray-200">
+        <h4 className="font-medium text-gray-700 mb-2">Sources:</h4>
+        <div className="flex flex-wrap gap-2">
+          {response.sources.map((source, idx) => (
+            <span
+              key={idx}
+              className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+            >
+              {source}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+
+ 
+    
+  </div>
+)}
+
         </div>
 
         {/* Live Agent Status */}

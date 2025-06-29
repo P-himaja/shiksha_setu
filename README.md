@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📘 ShikshaSetu – EduAgent: AI-Powered Learning Platform
 
-## Getting Started
+**ShikshaSetu** is a multi-agent AI learning platform that empowers students and teachers through Retrieval-Augmented Generation (RAG). It enables seamless content upload, doubt-solving, application discovery, and automatic lesson planning — all powered by custom agents designed for personalized education.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 🔍 **Content Upload:** Upload educational PDFs (textbooks, notes) and vectorize them for retrieval.
+- 💬 **Student Doubt Solver:** Ask natural language questions and get context-aware answers.
+- 🎯 **Application Finder:** Explore real-life applications of concepts.
+- 📚 **Teacher Assistant:** Generate lesson plans based on topics.
+- 🧠 **Multi-Agent RAG System:** Intelligent agents for different educational tasks.
+- 🖼️ **Interactive UI:** Clean, responsive frontend built with Next.js and Tailwind CSS.
+
+---
+
+## 🧱 Tech Stack
+
+| Layer         | Technologies Used                                                                 |
+|---------------|------------------------------------------------------------------------------------|
+| Frontend      | `Next.js`, `React`, `Tailwind CSS`, `Lucide Icons`                                |
+| Backend       | `Next.js API Routes`, `LangChain`, `OpenAI API`, `Pinecone`                       |
+| RAG Core      | `LangChain`, `Text Splitters`, `Embeddings`, `Vector Store`, `Agents`             |
+| File Handling | `FormData`, `PDF parsing`, `@pdf-parse`                                           |
+| Hosting       | `Vercel` (Frontend & API), `Pinecone` (Vector DB), `OpenAI` (LLM Inference)       |
+
+---
+
+## 📁 Folder Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+shikshasetu/
+├── app/                    # Next.js App directory
+│   └── api/
+│       ├── upload/         # Upload API route (PDF ingestion)
+│       └── query/          # Query API route (agent responses)
+├── components/             # Shared components (e.g., UI Cards)
+├── lib/                    # Core logic
+│   └── rag/                # RAG pipeline logic (ingest + query)
+├── public/                 # Static assets
+├── styles/                 # Global styles
+└── README.md
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📸 Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🖼️ Homepage – Job Listings
+![Homepage]
+(./screenshots/homepage.png) 
+(./screenshots/homepage2.png)
+### 🧾 RAG Agents 
+![RAG agent : Lesson Planner for Teachers.](./screenshots/lesson-generator-agent.png)
+![RAG agent : Applications Finder for Students ](./screenshots/application-finder-agent.png)
+![RAG agent : Doubt Solver  for Students ](./screenshots/doubt-solver.png)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 💡 Use Cases
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 📖 **Students** can ask follow-up questions directly from their syllabus and receive intelligent answers with references.
+- 👩‍🏫 **Teachers** can generate structured lesson plans based on any topic in seconds.
+- 🧪 **Institutions** can integrate EduAgent with LMS platforms for curriculum enhancement.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+##  🙌 Contributors
+Himaja Pannati – Full-stack Developer, AI/ML Enthusiast
+B.E. Computer Engineering, VESIT
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Anjali Thakrani – Frontend Developer, ML Developer
+B.E. Computer Engineering, VESIT

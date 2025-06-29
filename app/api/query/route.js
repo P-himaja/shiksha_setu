@@ -1,26 +1,41 @@
-// app/api/query/route.js
-
 import { NextResponse } from 'next/server';
-import { ragService } from '@/lib/rag/rag-service.js';
-import { generateWithGemini } from '@/lib/rag/gemini-generate.js';
+import { LessonPlannerAgent } from '../../../lib/agents/lesson-planner';
+import { DoubtSolverAgent } from '../../../lib/agents/doubt-solver';
+import { ApplicationGeneratorAgent } from '../../../lib/agents/app-generator';
 
 export async function POST(request) {
   try {
-    const { query, k = 4 } = await request.json();
+    const { query, type = 'doubt', grade = '10', level = 'high school' } = await request.json();
+
     if (!query) {
       return NextResponse.json({ error: 'Missing query' }, { status: 400 });
     }
 
-    const results = await ragService.searchSimilar(query, k);
-    const context = results.map(doc => doc.metadata.pageContent || "").join("\n---\n");
+    let agent;
+    let result;
 
-    const answer = await generateWithGemini(query, context);
+    switch (type) {
+      case 'lesson':
+        agent = new LessonPlannerAgent();
+        result = await agent.create(query, grade);
+        break;
 
-    return NextResponse.json({
-      answer,
-      contextChunks: results.length,
-      sources: results.map(doc => doc.metadata.source || "Unknown"),
-    });
+      case 'doubt':
+        agent = new DoubtSolverAgent();
+        result = await agent.solve(query);
+        break;
+
+      case 'application':
+        agent = new ApplicationGeneratorAgent();
+        result = await agent.generate(query, level);
+        break;
+
+      default:
+        return NextResponse.json({ error: 'Invalid agent type' }, { status: 400 });
+    }
+
+    return NextResponse.json(result);
+
   } catch (error) {
     console.error('[QUERY_ROUTE_ERROR]:', error);
     return NextResponse.json({ error: 'Query failed', details: error.message }, { status: 500 });
