@@ -41,18 +41,18 @@ shikshasetu/
 ├── public/                 # Static assets
 ├── styles/                 # Global styles
 └── README.md
-```bash
+```
 ---
 
 ## 📸 Screenshots
 
-### 🖼️ Homepage – Job Listings
-![Homepage]
-(./screenshots/homepage.png) 
-(./screenshots/homepage2.png)
-### 🧾 RAG Agents 
+### 🖼️ Homepage
+![Homepage](./screenshots/homepage.png) 
+### RAG agent : Lesson Planner for Teachers.
 ![RAG agent : Lesson Planner for Teachers.](./screenshots/lesson-generator-agent.png)
+### RAG agent : Applications Finder for Students 
 ![RAG agent : Applications Finder for Students ](./screenshots/application-finder-agent.png)
+### RAG agent : Doubt Solver  for Students
 ![RAG agent : Doubt Solver  for Students ](./screenshots/doubt-solver.png)
 
 ---
