@@ -1,9 +1,13 @@
 "use client"
 
+import type React from "react"
 import { useState } from "react"
-import { Button } from "components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   BookOpen,
   Brain,
@@ -24,10 +28,199 @@ import {
   BarChart3,
   Sparkles,
   MicOff,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Send,
 } from "lucide-react"
 import Link from "next/link"
+import { Navigation } from "@/components/ui/navigation"
+import { ProfilePage } from "@/components/ui/profile-page"
 
+type PageType = "home" | "contact" | "profile"
+
+// Contact Page Component
+const ContactPage = ({ setCurrentPage }: { setCurrentPage: (page: PageType) => void }) => {
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    alert("Thank you for your message! We'll get back to you soon.")
+    setContactForm({ name: "", email: "", subject: "", message: "" })
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <Navigation currentPage="contact" setCurrentPage={setCurrentPage} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100">
+            <MessageSquare className="w-4 h-4 mr-1" />
+            Get in Touch
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Contact{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Us</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Have questions about ShikshaSetu? We're here to help you on your learning journey.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Contact Form */}
+          <Card className="border-blue-200">
+            <CardHeader>
+              <CardTitle className="text-2xl">Send us a Message</CardTitle>
+              <CardDescription>Fill out the form below and we'll get back to you as soon as possible.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleContactSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="subject">Subject</Label>
+                  <Input
+                    id="subject"
+                    value={contactForm.subject}
+                    onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                    placeholder="What's this about?"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    value={contactForm.message}
+                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                    placeholder="Tell us more about your question or feedback..."
+                    rows={6}
+                    required
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Contact Information */}
+          <div className="space-y-8">
+            <Card className="border-green-200">
+              <CardHeader>
+                <CardTitle className="text-2xl">Get in Touch</CardTitle>
+                <CardDescription>Reach out to us through any of these channels</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Email Us</h3>
+                    <p className="text-gray-600">support@shikshasetu.com</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Phone className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Call Us</h3>
+                    <p className="text-gray-600">+91 1800-123-4567</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Visit Us</h3>
+                    <p className="text-gray-600">123 Education Hub, New Delhi, India</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Support Hours</h3>
+                    <p className="text-gray-600">Mon-Fri: 9AM-6PM IST</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-blue-200">
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">How does the AI tutoring work?</h4>
+                  <p className="text-sm text-gray-600">
+                    Our AI analyzes your textbook content and creates personalized learning experiences with practical
+                    applications.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Is ShikshaSetu free to use?</h4>
+                  <p className="text-sm text-gray-600">
+                    We offer a free tier with basic features. Premium plans unlock advanced AI capabilities and
+                    unlimited access.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Which languages are supported?</h4>
+                  <p className="text-sm text-gray-600">
+                    We support 15+ languages including Hindi, English, Tamil, Bengali, and more regional languages.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Main ShikshaSetu Component
 export default function ShikshaSetu() {
+  const [currentPage, setCurrentPage] = useState<PageType>("home")
   const [uploadedFile, setUploadedFile] = useState("")
   const [generatedContent, setGeneratedContent] = useState("")
   const [isListening, setIsListening] = useState(false)
@@ -48,7 +241,6 @@ export default function ShikshaSetu() {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
       const recognition = new SpeechRecognition()
-
       recognition.continuous = false
       recognition.interimResults = false
       recognition.lang = "en-US"
@@ -88,10 +280,8 @@ export default function ShikshaSetu() {
   }
 
   const generateAIResponse = (question: string) => {
-    // Simulate AI response based on question type
     setTimeout(() => {
       let response = ""
-
       if (question.toLowerCase().includes("math") || question.toLowerCase().includes("calculate")) {
         response =
           "Let me help you with this math problem! For calculations, I recommend breaking it down into smaller steps. What specific calculation are you working on?"
@@ -109,8 +299,6 @@ export default function ShikshaSetu() {
       }
 
       setAiResponse(response)
-
-      // Text-to-speech response
       if ("speechSynthesis" in window) {
         const utterance = new SpeechSynthesisUtterance(response)
         utterance.rate = 0.8
@@ -120,44 +308,19 @@ export default function ShikshaSetu() {
     }, 1000)
   }
 
+  // Render different pages based on current page state
+  if (currentPage === "contact") {
+    return <ContactPage setCurrentPage={setCurrentPage} />
+  }
+
+  if (currentPage === "profile") {
+    return <ProfilePage setCurrentPage={setCurrentPage} />
+  }
+
+  // Original home page content with updated navigation
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                ShikshaSetu
-              </span>
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Features
-              </a>
-              <a href="#demo" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Demo
-              </a>
-              <a href="#pricing" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Pricing
-              </a>
-              <Link href="/signin">
-                <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 bg-transparent">
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
@@ -189,14 +352,14 @@ export default function ShikshaSetu() {
                 </Button>
               </Link>
               <Link href="/agents">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-blue-200 text-blue-600 hover:bg-blue-50 bg-transparent"
-              >
-                <BookOpen className="w-5 h-5 mr-2" />
-                Try Demo
-              </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-blue-200 text-blue-600 hover:bg-blue-50 bg-transparent"
+                >
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Try Demo
+                </Button>
               </Link>
             </div>
           </div>
@@ -284,7 +447,6 @@ export default function ShikshaSetu() {
                       <p className="text-sm">{userQuestion}</p>
                     </div>
                   )}
-
                   {aiResponse && (
                     <div className="bg-green-50 p-4 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
@@ -294,7 +456,6 @@ export default function ShikshaSetu() {
                       <p className="text-sm">{aiResponse}</p>
                     </div>
                   )}
-
                   <div className="flex gap-2">
                     <Button
                       onClick={isListening ? stopListening : startListening}
@@ -313,7 +474,6 @@ export default function ShikshaSetu() {
                       )}
                     </Button>
                   </div>
-
                   <div className="text-xs text-gray-500 text-center">
                     Click the microphone and ask any question about math, science, history, or any subject!
                   </div>
@@ -423,7 +583,7 @@ export default function ShikshaSetu() {
                 icon: Lightbulb,
                 title: "Study Material Generator",
                 description:
-                  "Teachers can enter a topic  and get a tailored lesson plan with learning objectives, key points, and suggested activities—powered by the uploaded content.",
+                  "Teachers can enter a topic and get a tailored lesson plan with learning objectives, key points, and suggested activities—powered by the uploaded content.",
                 color: "purple",
               },
               {
@@ -629,6 +789,7 @@ export default function ShikshaSetu() {
               size="lg"
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
+              onClick={() => setCurrentPage("contact")}
             >
               <MessageSquare className="w-5 h-5 mr-2" />
               Ask a Question
@@ -693,9 +854,12 @@ export default function ShikshaSetu() {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button
+                    onClick={() => setCurrentPage("contact")}
+                    className="hover:text-white transition-colors text-left"
+                  >
                     Contact Us
-                  </a>
+                  </button>
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">

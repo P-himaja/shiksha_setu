@@ -1,31 +1,54 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Brain, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { Brain, Eye, EyeOff, ArrowLeft, AlertCircle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const { signIn, signInWithGoogle } = useAuth()
+  const router = useRouter()
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signIn(email, password)
+      router.push("/") // Redirect to home page after successful sign in
+    } catch (error: any) {
+      setError(error.message || "Failed to sign in. Please try again.")
+    } finally {
       setIsLoading(false)
-      // In a real app, you would handle authentication here
-      alert("Sign in successful! Welcome back to ShikshaSetu!")
-    }, 2000)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    setError("")
+
+    try {
+      await signInWithGoogle()
+      router.push("/") // Redirect to home page after successful sign in
+    } catch (error: any) {
+      setError(error.message || "Failed to sign in with Google. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -56,6 +79,13 @@ export default function SignIn() {
             <CardDescription>Enter your credentials to access your account</CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <Alert className="mb-4" variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -67,9 +97,9 @@ export default function SignIn() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="border-blue-200 focus:border-blue-500"
+                  disabled={isLoading}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -81,11 +111,13 @@ export default function SignIn() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     className="border-blue-200 focus:border-blue-500 pr-10"
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -98,6 +130,7 @@ export default function SignIn() {
                     id="remember"
                     type="checkbox"
                     className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                    disabled={isLoading}
                   />
                   <Label htmlFor="remember" className="text-sm text-gray-600">
                     Remember me
@@ -128,7 +161,12 @@ export default function SignIn() {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <Button variant="outline" className="border-blue-200 bg-transparent">
+                <Button
+                  variant="outline"
+                  className="border-blue-200 bg-transparent"
+                  onClick={handleGoogleSignIn}
+                  disabled={isLoading}
+                >
                   <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -149,7 +187,7 @@ export default function SignIn() {
                   </svg>
                   Google
                 </Button>
-                <Button variant="outline" className="border-blue-200 bg-transparent">
+                <Button variant="outline" className="border-blue-200 bg-transparent" disabled={isLoading}>
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>

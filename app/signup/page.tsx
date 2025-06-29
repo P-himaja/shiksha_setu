@@ -1,48 +1,77 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Brain, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react"
+import { Brain, Eye, EyeOff, ArrowLeft, AlertCircle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    grade: "",
-    preferredLanguage: "",
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  const { signUp, signInWithGoogle } = useAuth()
+  const router = useRouter()
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
   }
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    setError("")
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!")
+      setError("Passwords do not match")
+      setIsLoading(false)
       return
     }
 
-    setIsLoading(true)
-
-    // Simulate API call
-    setTimeout(() => {
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long")
       setIsLoading(false)
-      alert("Account created successfully! Welcome to ShikshaSetu!")
-    }, 2000)
+      return
+    }
+
+    try {
+      await signUp(formData.email, formData.password, formData.name)
+      router.push("/") // Redirect to home page after successful sign up
+    } catch (error: any) {
+      setError(error.message || "Failed to create account. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignUp = async () => {
+    setIsLoading(true)
+    setError("")
+
+    try {
+      await signInWithGoogle()
+      router.push("/") // Redirect to home page after successful sign up
+    } catch (error: any) {
+      setError(error.message || "Failed to sign up with Google. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -62,28 +91,36 @@ export default function SignUp() {
               ShikshaSetu
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Start Your Learning Journey</h1>
-          <p className="text-gray-600">Create your free account and unlock AI-powered learning</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Your Account</h1>
+          <p className="text-gray-600">Join thousands of students learning with AI</p>
         </div>
 
         {/* Sign Up Form */}
         <Card className="border-blue-200">
           <CardHeader>
-            <CardTitle>Create Account</CardTitle>
-            <CardDescription>Fill in your details to get started</CardDescription>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Create your account to start your learning journey</CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <Alert className="mb-4" variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <form onSubmit={handleSignUp} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
-                  id="fullName"
-                  type="text"
+                  id="name"
+                  name="name"
                   placeholder="Enter your full name"
-                  value={formData.fullName}
-                  onChange={(e) => handleInputChange("fullName", e.target.value)}
+                  value={formData.name}
+                  onChange={handleInputChange}
                   required
                   className="border-blue-200 focus:border-blue-500"
+                  disabled={isLoading}
                 />
               </div>
 
@@ -91,57 +128,15 @@ export default function SignUp() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="Enter your email"
                   value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  onChange={handleInputChange}
                   required
                   className="border-blue-200 focus:border-blue-500"
+                  disabled={isLoading}
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="grade">Grade/Class</Label>
-                  <Select value={formData.grade} onValueChange={(value) => handleInputChange("grade", value)}>
-                    <SelectTrigger className="border-blue-200 focus:border-blue-500">
-                      <SelectValue placeholder="Select grade" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="6">Class 6</SelectItem>
-                      <SelectItem value="7">Class 7</SelectItem>
-                      <SelectItem value="8">Class 8</SelectItem>
-                      <SelectItem value="9">Class 9</SelectItem>
-                      <SelectItem value="10">Class 10</SelectItem>
-                      <SelectItem value="11">Class 11</SelectItem>
-                      <SelectItem value="12">Class 12</SelectItem>
-                      <SelectItem value="college">College</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="language">Preferred Language</Label>
-                  <Select
-                    value={formData.preferredLanguage}
-                    onValueChange={(value) => handleInputChange("preferredLanguage", value)}
-                  >
-                    <SelectTrigger className="border-blue-200 focus:border-blue-500">
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="hindi">Hindi</SelectItem>
-                      <SelectItem value="tamil">Tamil</SelectItem>
-                      <SelectItem value="bengali">Bengali</SelectItem>
-                      <SelectItem value="gujarati">Gujarati</SelectItem>
-                      <SelectItem value="marathi">Marathi</SelectItem>
-                      <SelectItem value="telugu">Telugu</SelectItem>
-                      <SelectItem value="kannada">Kannada</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
               <div className="space-y-2">
@@ -149,17 +144,20 @@ export default function SignUp() {
                 <div className="relative">
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
+                    placeholder="Create a password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={handleInputChange}
                     required
                     className="border-blue-200 focus:border-blue-500 pr-10"
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -168,43 +166,17 @@ export default function SignUp() {
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                    required
-                    className="border-blue-200 focus:border-blue-500 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-2">
-                <input
-                  id="terms"
-                  type="checkbox"
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
                   required
-                  className="mt-1 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                  className="border-blue-200 focus:border-blue-500"
+                  disabled={isLoading}
                 />
-                <Label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
-                  I agree to the{" "}
-                  <Link href="#" className="text-blue-600 hover:text-blue-700">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="#" className="text-blue-600 hover:text-blue-700">
-                    Privacy Policy
-                  </Link>
-                </Label>
               </div>
 
               <Button
@@ -216,40 +188,23 @@ export default function SignUp() {
               </Button>
             </form>
 
-            {/* Benefits */}
-            <div className="mt-6 p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-800 mb-2">What you'll get:</h4>
-              <ul className="space-y-1 text-sm text-green-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />5 free AI applications daily
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Voice doubt solving in your language
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Progress tracking and insights
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Access to student community
-                </li>
-              </ul>
-            </div>
-
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or sign up with</span>
+                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <Button variant="outline" className="border-blue-200 bg-transparent">
+                <Button
+                  variant="outline"
+                  className="border-blue-200 bg-transparent"
+                  onClick={handleGoogleSignUp}
+                  disabled={isLoading}
+                >
                   <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -270,7 +225,7 @@ export default function SignUp() {
                   </svg>
                   Google
                 </Button>
-                <Button variant="outline" className="border-blue-200 bg-transparent">
+                <Button variant="outline" className="border-blue-200 bg-transparent" disabled={isLoading}>
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
@@ -283,7 +238,7 @@ export default function SignUp() {
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
                 <Link href="/signin" className="text-blue-600 hover:text-blue-700 font-medium">
-                  Sign in here
+                  Sign in
                 </Link>
               </p>
             </div>
