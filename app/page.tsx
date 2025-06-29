@@ -188,6 +188,7 @@ export default function ShikshaSetu() {
                   Start Learning Free
                 </Button>
               </Link>
+              <Link href="/agents">
               <Button
                 size="lg"
                 variant="outline"
@@ -196,6 +197,7 @@ export default function ShikshaSetu() {
                 <BookOpen className="w-5 h-5 mr-2" />
                 Try Demo
               </Button>
+              </Link>
             </div>
           </div>
 
@@ -412,16 +414,16 @@ export default function ShikshaSetu() {
               },
               {
                 icon: Target,
-                title: "Application Tracker",
+                title: "Upload Educational PDFs like textbooks or notes.",
                 description:
-                  "Connect your daily learning to real-world applications with personalized suggestions and mini-projects.",
+                  "Our system reads and processes the content into smart knowledge chunks using RAG (Retrieval-Augmented Generation), making it searchable and ready for AI-powered doubt solving and lesson planning.",
                 color: "green",
               },
               {
                 icon: Lightbulb,
                 title: "Study Material Generator",
                 description:
-                  "Get personalized study materials, summaries, and practice questions tailored to your learning style.",
+                  "Teachers can enter a topic  and get a tailored lesson plan with learning objectives, key points, and suggested activities—powered by the uploaded content.",
                 color: "purple",
               },
               {

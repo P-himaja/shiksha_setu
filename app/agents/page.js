@@ -59,7 +59,7 @@ export default function Agents() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            🤖 EduAgent - AI-Powered Learning Platform
+            🤖 ShikshaSetu - AI-Powered Learning Platform
           </h1>
           <p className="text-lg text-gray-600">
             Multi-Agent RAG System for Personalized Education
